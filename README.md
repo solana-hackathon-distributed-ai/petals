@@ -62,6 +62,14 @@ sudo docker run -p 31330:31330 --ipc host --gpus all --volume petals-cache:/cach
     learningathome/petals:main \
     python -m petals.cli.run_server --port 31330 meta-llama/Meta-Llama-3.1-405B-Instruct
 ```
+To run a model which is gated on HuggingFace, one must authenticate with HuggingFace first.  One such way is to execute the HuggingFace login prior to starting the petals server.
+```bash
+sudo docker run -p 31330:31330 --ipc host --gpus all --volume petals-cache:/cache --rm \
+     learningathome/petals:main  \
+	 bash -c "huggingface-cli login --token ### your HuggingFace token ### &&  \
+     python -m petals.cli.run_server --port 31330 meta-llama/Meta-Llama-3.1-405B-Instruct"
+```
+One may generate a HuggingFace access token by logging into HuggingFace and visiting https://huggingface.co/settings/tokens.
 
 🍏 **macOS + Apple M1/M2 GPU.** Install [Homebrew](https://brew.sh/), then run these commands:
 
