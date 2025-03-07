@@ -1,3 +1,6 @@
+# having technical difficulties with git but i need to go to sleep. c u 2morrow.
+
+
 <p align="center">
     <img src="https://i.imgur.com/7eR7Pan.png" width="400"><br>
     Run large language models at home, BitTorrent-style.<br>
