@@ -1,5 +1,13 @@
 # having technical difficulties with git but i need to go to sleep. c u 2morrow.
+# how to run it
 
+first set up conda
+
+pip install -r requirements.txt
+
+huggingface-cli login
+
+python(or python3 if linux) src\petals\cli\run_server.py bigscience/bloom-560m
 
 <p align="center">
     <img src="https://i.imgur.com/7eR7Pan.png" width="400"><br>
