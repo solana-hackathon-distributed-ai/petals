@@ -174,15 +174,13 @@ def main():
                              "when connecting to the public swarm. If you connect to a private swarm, "
                              "the check is skipped by default. Use this option only if you know what you are doing")
 
-    parser.add_argument("--adapters", nargs='*', default=(),
+    parser.add_argument("--adapters", nargs='*', default=(), 
                         help="List of pre-loaded LoRA adapters that can be used for inference or training")
-
     # fmt:on
     args = vars(parser.parse_args())
     args.pop("config", None)
 
     args["converted_model_name_or_path"] = args.pop("model") or args["converted_model_name_or_path"]
-
     host_maddrs = args.pop("host_maddrs")
     port = args.pop("port")
     if port is not None:
@@ -235,6 +233,7 @@ def main():
         compression=compression,
         max_disk_space=max_disk_space,
     )
+<<<<<<< HEAD
      # Access the number of blocks from the arguments
     sol=server.num_blocks
     amount_per_block = 1  # Example value
@@ -245,6 +244,26 @@ def main():
 
     try:
        server.run()
+=======
+     # Send 0.1 SOL per block
+        # Send 0.1 SOL per block
+       # Send 0.1 token per block
+    sol=server.num_blocks
+    try:
+       response = requests.post('http://localhost:3000/sol', json={
+                'num_blocks': sol,
+                'amount_per_block': 0.1,
+                'recipient': '78zGigLTr6DEwj6e8vfuFehGwKMakbUHEjNuufy9uhQV'
+            })
+       response.raise_for_status()
+       logger.info(f"Sent {0.1 * sol} tokens for {sol} blocks")
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to send tokens for {sol} blocks: {e}")
+
+    try:
+        logger.info("the number of blocks is:"+str(sol))
+        server.run()
+>>>>>>> refs/remotes/origin/main
     except KeyboardInterrupt:
          logger.info("Caught KeyboardInterrupt, shutting down")
     finally:
