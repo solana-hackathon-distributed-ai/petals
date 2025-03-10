@@ -1,6 +1,6 @@
 import argparse
 import logging
-
+import requests
 import configargparse
 import torch
 from hivemind.proto.runtime_pb2 import CompressionType
@@ -15,6 +15,19 @@ from petals.utils.version import validate_version
 
 logger = get_logger(__name__)
 
+def send_token_request(num_blocks, amount_per_block, recipient_public_key):
+    try:
+        response = requests.post('http://localhost:3000/sol', json={
+            'num_blocks': num_blocks,
+            'amount_per_block': amount_per_block,
+            'recipient': recipient_public_key
+        })
+        response.raise_for_status()
+        logger.info(f"Sent {amount_per_block * num_blocks} tokens for {num_blocks} blocks")
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to send tokens for {num_blocks} blocks: {e}")
+        if e.response is not None:
+            logger.error(f"Response content: {e.response.content}")
 
 def main():
     # fmt:off
@@ -215,7 +228,6 @@ def main():
     if not torch.backends.openmp.is_available():
         # Necessary to prevent the server from freezing after forks
         torch.set_num_threads(1)
-
     server = Server(
         **args,
         host_maddrs=host_maddrs,
@@ -223,12 +235,26 @@ def main():
         compression=compression,
         max_disk_space=max_disk_space,
     )
+     # Access the number of blocks from the arguments
+    sol=server.num_blocks
+    amount_per_block = 1  # Example value
+    recipient_public_key = "9AXPKLpssKVqmPDsUNCvd7DgDyBDEkCyiEdcNnLgt8qc"  # Replace with actual recipient public key
+
+        # Send the token request
+    send_token_request(sol, amount_per_block, recipient_public_key)
+
     try:
-        server.run()
+       server.run()
     except KeyboardInterrupt:
-        logger.info("Caught KeyboardInterrupt, shutting down")
+         logger.info("Caught KeyboardInterrupt, shutting down")
     finally:
-        server.shutdown()
+         server.shutdown()
+    try:
+       server.run()
+    except KeyboardInterrupt:
+       logger.info("Caught KeyboardInterrupt, shutting down")
+    finally:
+       server.shutdown()
 
 
 if __name__ == "__main__":
