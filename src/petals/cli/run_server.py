@@ -233,7 +233,7 @@ def main():
         compression=compression,
         max_disk_space=max_disk_space,
     )
-<<<<<<< HEAD
+
      # Access the number of blocks from the arguments
     sol=server.num_blocks
     amount_per_block = 1  # Example value
@@ -242,9 +242,6 @@ def main():
         # Send the token request
     send_token_request(sol, amount_per_block, recipient_public_key)
 
-    try:
-       server.run()
-=======
      # Send 0.1 SOL per block
         # Send 0.1 SOL per block
        # Send 0.1 token per block
@@ -263,18 +260,10 @@ def main():
     try:
         logger.info("the number of blocks is:"+str(sol))
         server.run()
->>>>>>> refs/remotes/origin/main
     except KeyboardInterrupt:
          logger.info("Caught KeyboardInterrupt, shutting down")
     finally:
          server.shutdown()
-    try:
-       server.run()
-    except KeyboardInterrupt:
-       logger.info("Caught KeyboardInterrupt, shutting down")
-    finally:
-       server.shutdown()
-
 
 if __name__ == "__main__":
     main()
