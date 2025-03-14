@@ -235,12 +235,12 @@ def main():
     )
 
      # Access the number of blocks from the arguments
-    sol=server.num_blocks
-    amount_per_block = 1  # Example value
-    recipient_public_key = "9AXPKLpssKVqmPDsUNCvd7DgDyBDEkCyiEdcNnLgt8qc"  # Replace with actual recipient public key
+    #sol=server.num_blocks
+    #amount_per_block = 1  # Example value
+    #recipient_public_key = "9AXPKLpssKVqmPDsUNCvd7DgDyBDEkCyiEdcNnLgt8qc"  # Replace with actual recipient public key
 
         # Send the token request
-    send_token_request(sol, amount_per_block, recipient_public_key)
+    #send_token_request(sol, amount_per_block, recipient_public_key)
 
      # Send 0.1 SOL per block
         # Send 0.1 SOL per block
@@ -249,7 +249,7 @@ def main():
     try:
        response = requests.post('http://localhost:3000/sol', json={
                 'num_blocks': sol,
-                'amount_per_block': 0.1,
+                'amount_per_block': 1,
                 'recipient': '78zGigLTr6DEwj6e8vfuFehGwKMakbUHEjNuufy9uhQV'
             })
        response.raise_for_status()
