@@ -4,3 +4,6 @@ pandas
 scipy
 hivemind
 configparse
+numpy==1.26.4 
+humanfriendly
+petals
