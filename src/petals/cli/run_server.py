@@ -12,22 +12,32 @@ from petals.constants import DTYPE_MAP, PUBLIC_INITIAL_PEERS
 from petals.server.server import Server
 from petals.utils.convert_block import QuantType
 from petals.utils.version import validate_version
+import schedule
+import time
 
 logger = get_logger(__name__)
 
-def send_token_request(num_blocks, amount_per_block, recipient_public_key):
+
+def start_scheduler(server, recipient):
+    schedule.every(1).hour.do(send_token_request, server=server, recipient_public_key=recipient)
+    server.run()
+    while True:
+        schedule.run_pending()
+        time.sleep(60)  # Check every minute
+
+def send_token_request(server, recipient_public_key):
+    sol = server.num_blocks
     try:
         response = requests.post('http://localhost:3000/sol', json={
-            'num_blocks': num_blocks,
-            'amount_per_block': amount_per_block,
+            'num_blocks': sol,
+            'amount_per_block': 1,  # Adjust if needed
             'recipient': recipient_public_key
         })
         response.raise_for_status()
-        logger.info(f"Sent {amount_per_block * num_blocks} tokens for {num_blocks} blocks")
+        logger.info(f"Sent {1 * sol} tokens for {sol} blocks")
     except requests.exceptions.RequestException as e:
-        logger.error(f"Failed to send tokens for {num_blocks} blocks: {e}")
-        if e.response is not None:
-            logger.error(f"Response content: {e.response.content}")
+        logger.error(f"Failed to send tokens for {sol} blocks: {e}")
+
 
 def main():
     # fmt:off
@@ -233,37 +243,31 @@ def main():
         compression=compression,
         max_disk_space=max_disk_space,
     )
-
-     # Access the number of blocks from the arguments
-    #sol=server.num_blocks
-    #amount_per_block = 1  # Example value
-    #recipient_public_key = "9AXPKLpssKVqmPDsUNCvd7DgDyBDEkCyiEdcNnLgt8qc"  # Replace with actual recipient public key
-
-        # Send the token request
-    #send_token_request(sol, amount_per_block, recipient_public_key)
-
-     # Send 0.1 SOL per block
-        # Send 0.1 SOL per block
-       # Send 0.1 token per block
-    sol=server.num_blocks
+    
+    recipient = "78zGigLTr6DEwj6e8vfuFehGwKMakbUHEjNuufy9uhQV"  # Set recipient here or get from config/user input
+    
+    # Set up scheduler
+    schedule.every(1).hour.do(send_token_request, server=server, recipient_public_key=recipient)
+    logger.info("First token payment will occur in 1 hour")
+    
+    # REPLACE THE THREADING CODE WITH THIS:
+    from concurrent.futures import ThreadPoolExecutor
+    
+    executor = ThreadPoolExecutor(max_workers=2)
+    server_future = executor.submit(server.run)
+    
     try:
-       response = requests.post('http://localhost:3000/sol', json={
-                'num_blocks': sol,
-                'amount_per_block': 1,
-                'recipient': '78zGigLTr6DEwj6e8vfuFehGwKMakbUHEjNuufy9uhQV'
-            })
-       response.raise_for_status()
-       logger.info(f"Sent {0.1 * sol} tokens for {sol} blocks")
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Failed to send tokens for {sol} blocks: {e}")
-
-    try:
-        logger.info("the number of blocks is:"+str(sol))
-        server.run()
+        logger.info("Server started, running scheduler...")
+        while not server_future.done():
+            schedule.run_pending()
+            time.sleep(1)
     except KeyboardInterrupt:
-         logger.info("Caught KeyboardInterrupt, shutting down")
+        logger.info("Caught KeyboardInterrupt, shutting down")
     finally:
-         server.shutdown()
+        server.shutdown()
+        executor.shutdown(wait=False)
+     
 
 if __name__ == "__main__":
     main()
+   

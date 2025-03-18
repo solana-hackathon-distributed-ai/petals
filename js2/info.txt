@@ -1,0 +1,33 @@
+Generating a new keypair
+
+For added security, enter a BIP39 passphrase
+
+NOTE! This passphrase improves security of the recovery seed phrase NOT the
+keypair file itself, which is stored as insecure plain text
+
+BIP39 Passphrase (empty for none):
+
+Wrote new keypair to ./wallet4.json
+====================================================================================
+pubkey: FDXpbvGtYd4DRRC7VTy3U3X57CeSpGVmckP6bM3jM8eu
+====================================================================================
+Save this seed phrase and your BIP39 passphrase to recover your new keypair:
+copper swing immense domain fossil ceiling ozone dove fancy panther deliver practice
+====================================================================================
+
+Generating a new keypair
+
+For added security, enter a BIP39 passphrase
+
+NOTE! This passphrase improves security of the recovery seed phrase NOT the
+keypair file itself, which is stored as insecure plain text
+
+BIP39 Passphrase (empty for none):
+
+Wrote new keypair to ./wallet3.json
+===========================================================================
+pubkey: 14PFzfrwnv5LoYxxUhW56cuCJBjFCfnzcfjbMmvC7aD5
+===========================================================================
+Save this seed phrase and your BIP39 passphrase to recover your new keypair:
+salute intact iron snack flag element unusual tape copy rebuild bulb enough
+===========================================================================
