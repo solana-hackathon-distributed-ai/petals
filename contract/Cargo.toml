@@ -1,0 +1,15 @@
+[package]
+name = "credits-program"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+no-entrypoint = []
+
+[dependencies]
+solana-program = "2.2.1"
+arrayref = "0.3.7"
+build-bpf = "0.2.0"
+
+[lib]
+crate-type = ["cdylib", "lib"]

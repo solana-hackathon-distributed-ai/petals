@@ -1,0 +1,6 @@
+[programs.devnet]
+myproject = "ANREA2fPo9B7LFEuW5rLh51pvF1qpQmPhDwvbw22wxnK"
+
+[provider]
+cluster = "https://api.devnet.solana.com"
+wallet = "../../js2/wallet1.json"
