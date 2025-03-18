@@ -1,4 +1,4 @@
-torch>=1.12
+torch==2.5.1
 numpy
 pandas
 scipy
