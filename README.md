@@ -1,5 +1,3 @@
-# having technical difficulties with git but i need to go to sleep. c u 2morrow.
-# how to run it
 
 first set up conda and cuda
 
