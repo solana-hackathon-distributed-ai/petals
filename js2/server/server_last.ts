@@ -1,32 +1,37 @@
 import { Connection, clusterApiUrl, Keypair, PublicKey, Transaction, SendTransactionError } from '@solana/web3.js';
 import { createTransferInstruction, getAccount, getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from '@solana/spl-token';
-import fs from 'fs';
 import express from 'express';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Initialize the express engine
 const app: express.Application = express();
+
 // Take a port 3000 for running server.
 const port: number = 3000;
 
-// Read the keypair from the keypair.json file
-const keypairPath = 'wallet1.json';
-const keypairData = fs.readFileSync(keypairPath, 'utf8');
-const keypair = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(keypairData)));
+const rawPrivateKey = process.env.WALLET_PRIVATE_KEY;
+if (!rawPrivateKey) {
+    throw new Error("WALLET_PRIVATE_KEY is not set in .env");
+}
 
-// Extract the public key
+const wallet = JSON.parse(rawPrivateKey) as number[];
+const keypair = Keypair.fromSecretKey(Uint8Array.from(wallet));
 const publicKey = keypair.publicKey.toBase58();
-// Print the public key to the console
+
 console.log(`Public Key: ${publicKey}`);
 
 // Define the token mint address and token account addresses
 const mintAddress = new PublicKey('HubuF6KkMvxtRSdq8GmbNkaupedBiSu9ZzuzCm5nBBgs');
 const sourceTokenAccountAddress = new PublicKey('6hoaHQYthsgsEw3Y9r9vAGw7cyqp7A1iFB2BghTNXx8y');
-const fundingRecipientAddress = new PublicKey('4RTQxBrL8ebJnyL2LMTfoeBPVZMkywZBmGMbwvcJMbvr');
+
 
 // Handling requests
 app.use(express.json());
 
 app.post('/sol', async (req, res) => {
+
     try {
         // Parse the request body, ensuring proper BigInt conversion
         const num_blocks = BigInt(req.body.num_blocks);
@@ -58,9 +63,9 @@ app.post('/sol', async (req, res) => {
         );
 
         console.log(`Recipient Token Account: ${recipientTokenAccount.toBase58()}`);
-
-        // Check if the source token account exists and has sufficient balance
+        
         try {
+            // Check if the source token account exists and has sufficient balance
             const sourceTokenAccount = await getAccount(connection, sourceTokenAccountAddress);
             console.log(`Source Token Account Balance: ${sourceTokenAccount.amount.toString()}`);
 
@@ -88,10 +93,10 @@ app.post('/sol', async (req, res) => {
             if (!recipientAccountExists && i === 0) {
                 transaction.add(
                     createAssociatedTokenAccountInstruction(
-                        keypair.publicKey, // payer
-                        recipientTokenAccount, // associated token account
-                        recipientPublicKey, // owner
-                        mintAddress // mint
+                        keypair.publicKey,      // payer
+                        recipientTokenAccount,  // associated token account
+                        recipientPublicKey,     // owner
+                        mintAddress             // mint
                     )
                 );
                 recipientAccountExists = true; // Set to true so we don't try to create it again
@@ -115,6 +120,7 @@ app.post('/sol', async (req, res) => {
 
                 await connection.confirmTransaction(signature, 'confirmed');
                 console.log(`Transaction ${i + 1}/${num_blocks.toString()} confirmed with signature: ${signature}`);
+                
             } catch (error) {
                 if (error instanceof SendTransactionError) {
                     console.error(`Failed to send transaction: ${error.message}`);
