@@ -244,10 +244,12 @@ def main():
         max_disk_space=max_disk_space,
     )
     
-    recipient = "78zGigLTr6DEwj6e8vfuFehGwKMakbUHEjNuufy9uhQV"  # Set recipient here or get from config/user input
+    recipient = "8qYPuLNmnVgmLfR7ZGon7jfnSmNCr2MUHA9sUnfJseU3"  # Set recipient here or get from config/user input
     
     # Set up scheduler
-    schedule.every(1).hour.do(send_token_request, server=server, recipient_public_key=recipient)
+    send_token_request(server=server, recipient_public_key=recipient)
+    # Set up scheduler
+    schedule.every(1).hour.do(send_token_request(server=server, recipient_public_key=recipient)))
     logger.info("First token payment will occur in 1 hour")
     
     # REPLACE THE THREADING CODE WITH THIS:
