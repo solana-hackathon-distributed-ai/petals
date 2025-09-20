@@ -1,9 +1,14 @@
-torch==2.5.1
+torch
 numpy
 pandas
 scipy
-hivemind
+hivemind==1.1.8
 configparse
 numpy==1.26.4 
 humanfriendly
 petals
+huggingface_hub==0.20.3 
+transformers==4.31.0
+tokenizers==0.13.0 
+configargparse
+requests
