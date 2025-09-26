@@ -8,6 +8,10 @@ rustup default 1.60.0
 
 sudo apt install libonig-dev && libzstd-dev && libbz2-dev && nvidia-cuda-toolkit && python3-dev
 
+conda create -n py311 python=3.11
+
+conda activate py311
+
 pip install -r requirements.txt
 
 
