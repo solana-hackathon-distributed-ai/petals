@@ -6,7 +6,7 @@ npm i
 
 then
 
-node server.ts
+node server.cjs
 
 lastly you can test it with
 
