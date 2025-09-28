@@ -128,4 +128,4 @@ dmypy.json
 .pyre/
 
 .idea/
-js2/server/keypair.json
+js2/server/wallet/keypair.json
